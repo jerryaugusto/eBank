@@ -1,9 +1,11 @@
 <?php
 
-class Account
+namespace Beyondercode\Ebank\Model\Account;
+
+abstract class Account
 {
     private Owner $owner;
-    private float $balance;
+    protected float $balance;
     private static int $accountNumber = 0;
 
     public function __construct(Owner $owner)
@@ -21,12 +23,14 @@ class Account
 
     public function withdraw(float $toWithdraw): void
     {
+        $feeValue = $toWithdraw * $this->percentageFee();
+
         if ($toWithdraw > $this->balance) {
             echo "Balance unavailable!";
             return;
         }
 
-        $this->balance -= $toWithdraw;
+        $this->balance -= $feeValue;
     }
 
     public function deposit(float $toDeposit): void
@@ -37,17 +41,6 @@ class Account
         }
 
         $this->balance += $toDeposit;
-    }
-
-    public function transfer(float $toTransfer, Account $targetAccount): void
-    {
-        if ($toTransfer < $this->balance) {
-            echo "Balance unavailable!";
-            return;
-        }
-
-        $this->withdraw($toTransfer);
-        $targetAccount->deposit($toTransfer);
     }
 
     public function getBalance(): float
@@ -64,4 +57,6 @@ class Account
     {
         return self::$accountNumber;
     }
+
+    abstract protected function percentageFee(): float;
 }

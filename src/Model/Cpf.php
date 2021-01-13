@@ -1,6 +1,8 @@
 <?php
 
-class Cpf
+namespace Beyondercode\Ebank\Model;
+
+final class Cpf
 {
     private string $number;
 
